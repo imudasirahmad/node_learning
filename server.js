@@ -1,17 +1,18 @@
+console.log('stream');
 
-const http = require('http')
+var http = require('http')
+var fs = require('fs')
 
-// const server = http.createServer((req , res) => {
-//     res.end("Welcome")
-// })
-
-//using event Emmiter api
-
-const server = http.createServer()
-
-//emit request event
-//subscribe to it/ listen to it / respond to it
-
-server.on('request' , (req , res) => {
-    res.end("Welcome")
-})
+http
+  .createServer(function (req, res) {
+    // const text = fs.readFileSync('./content/big.txt', 'utf8')
+    // res.end(text)
+    const fileStream = fs.createReadStream('./content/big.txt', 'utf8')
+    fileStream.on('open', () => {
+      fileStream.pipe(res)
+    })
+    fileStream.on('error', (err) => {
+      res.end(err)
+    })
+  })
+  .listen(5000)

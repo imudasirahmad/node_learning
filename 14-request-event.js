@@ -13,3 +13,14 @@ customEmitter.on('response' , (name , id) => {
 
 
 customEmitter.emit('response'  , 'mudasir' , 30)
+
+var myEventHandler = function () {
+    console.log('I hear a scream!');
+  }
+  
+  //Assign the event handler to an event:
+  customEmitter.on('scream', myEventHandler);
+  
+  //Fire the 'scream' event:
+  customEmitter.emit('scream');
+  
