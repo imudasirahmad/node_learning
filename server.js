@@ -1,35 +1,28 @@
 const express = require('express')
 const app = express()
-
+const morgan = require('morgan')
+const logger = require('./logger')
+const authorize = require('./authorize')
 //  req => middleware => res
+// app.use([logger , authorize])
+
+app.use(morgan('tiny'))
 
 
-
-
-const logger = (req, res, next) => {
-  const method = req.method
-  const url = req.url
-  const time = new Date().getFullYear()
-  const time2 = new Date().getTime()
-
-  console.log(method, url, time , time2)
-  next()
-}
-
-// app.get('/', (req, res) => {
-//   const method = req.method
-//   const url = req.url
-//   const time = new Date().getFullYear()
-//   console.log(method, url, time)
-//   res.send('Home')
-// })
-
-app.get('/', logger,(req, res) => {
- 
-  res.send('Home')
+// app.use('/api' , logger)    ----apply to any route after api/
+// api/home/about/products
+app.get('/', (req, res) => {
+  res.send('<h1>Home</h1>')
 })
-app.get('/about', logger, (req, res) => {
+app.get('/about', (req, res) => {
   res.send('About')
+})
+app.get('/api/products', (req, res) => {
+  res.send('Products')
+})
+app.get('/api/items', (req, res) => {
+  console.log(req.user)
+  res.send('Items')
 })
 
 app.listen(5000, () => {
