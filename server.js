@@ -1,30 +1,25 @@
-const express = require('express')
-const app = express()
-const morgan = require('morgan')
-const logger = require('./logger')
-const authorize = require('./authorize')
-//  req => middleware => res
-// app.use([logger , authorize])
+const express = require("express");
+const app = express();
+const  people = require('./routes/people')
+const  auth = require('./routes/auth');
+const { getPeople, createPerson, deletePerson } = require("./2-express_tutorial/controllers/people");
 
-app.use(morgan('tiny'))
+// static assets
+app.use(express.static("./2-express_tutorial/methods-public"));
+
+// parse form data
+app.use(express.urlencoded({ extended: false }));
+// parse json
+app.use(express.json());
+
+app.use('/api/people', people)
+app.use('/login', auth)
 
 
-// app.use('/api' , logger)    ----apply to any route after api/
-// api/home/about/products
-app.get('/', (req, res) => {
-  res.send('<h1>Home</h1>')
-})
-app.get('/about', (req, res) => {
-  res.send('About')
-})
-app.get('/api/products', (req, res) => {
-  res.send('Products')
-})
-app.get('/api/items', (req, res) => {
-  console.log(req.user)
-  res.send('Items')
-})
+router.route('/').get(getPeople).post(createPerson)
+router.route('/').post(createPerson)
+router.route('/:id').put(updatePerson).delete(deletePerson)
 
-app.listen(5000, () => {
-  console.log('Server is listening on port 5000....')
-})
+app.listen(3000, () => {
+  console.log("Server is listening on port 5000....");
+});
